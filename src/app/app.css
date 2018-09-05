@@ -1,0 +1,113 @@
+body {
+  box-sizing: border-box;
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+	position: relative;
+	margin: 0;
+	padding: 0;
+  overflow-y: scroll;
+  background-color: #fff;
+  color: #1a1a1a;
+  line-height: 1;
+}
+
+body * {
+  font-size: inherit;
+  font-family: inherit;
+  box-sizing: inherit;
+  line-height: inherit;
+}
+
+#app {
+  max-width: 800px;
+  margin: auto;
+}
+
+a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.disabled {
+  pointer-events: none;
+  cursor: default;
+  opacity: .7;
+}
+
+a:hover {
+  color: #0056b3;
+}
+
+.text-center {
+  text-align: center;
+}
+
+header {
+  padding: 1rem;
+}
+
+main {
+  display: flex;
+  flex-direction: row;
+}
+
+section {
+  flex: 1;
+}
+
+aside {
+  width: auto;
+  padding-right: 2rem;
+}
+
+.menu {
+  padding: 0 1rem;
+}
+.menu a {
+  display: inline-block;
+  padding: .5rem 0;
+}
+.menu a.active {
+  box-shadow: 0px 1px 0px 0px #007bff;
+}
+
+button, a {
+  cursor: pointer;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+.form-group {
+  padding: 1rem 0;
+}
+.form-group > label {
+  display: block;
+  width: 100%;
+  padding-bottom: .5rem;
+}
+.form-group input {
+  display: block;
+  width: 100%;
+  line-height: 1.5;
+}
+
+.message {
+  position: relative;
+  padding: .75rem 1.25rem;
+  margin-bottom: 1rem;
+  border: 1px solid transparent;
+  border-radius: .25rem;
+}
+.message-success {
+  color: #155724;
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+}
+.message-error {
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+}
