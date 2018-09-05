@@ -5,6 +5,7 @@ import { ViewsEnum } from '../views.enum';
 import { Oracles } from './Oracles';
 import './app.css';
 import { CurveInit } from './CurveInit';
+import { GetEndpoint } from './GetEndpoint';
 
 export const App = ({state, dispatch}) => {
   const { provider, view, address } = state;
@@ -36,6 +37,9 @@ const MainSection = ({info, address, view, oracles, viewLoading, web3}) => {
       break;
     case ViewsEnum.INIT_CURVE:
       main = <CurveInit web3={web3} address={address}></CurveInit>;
+      break;
+    case ViewsEnum.GET_ENDPOINT:
+      main = <GetEndpoint web3={web3} address={address}></GetEndpoint>;
       break;
   }
   return <section className={className}>{viewLoading ? 'Loading ...' : main}</section>;

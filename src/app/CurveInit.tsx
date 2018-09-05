@@ -35,9 +35,10 @@ export class CurveInit extends React.PureComponent<{web3: any; address: string},
   }
 
   async handleSubmit(e) {
+    e.preventDefault();
     const {web3, address} = this.props;
     const {curves} = this.state;
-    e.preventDefault();
+    if (!curves.length) return;
     const endpoint = e.target.endpoint.value;
     this.setState({loading: true});
     try {
@@ -113,12 +114,10 @@ export class CurveInit extends React.PureComponent<{web3: any; address: string},
 const CurveFormGroupDisabled = ({curve, prevCurve}) => (
   <fieldset disabled>
     <div className="form-group">
-      <label>Curve starting at {prevCurve ? prevCurve[prevCurve.length - 1] : 1} to</label>
-      <input type="number" defaultValue={curve[curve.length - 1]} />
+      <div>Curve starting at {prevCurve ? prevCurve[prevCurve.length - 1] : 1} to {curve[curve.length - 1]}</div>
     </div>
     <div className="form-group">
-      <label>Curve</label>
-      <input type="text" defaultValue={curve.slice(1, curve.length - 1)} />
+      <div>Curve: <code>{JSON.stringify(curve.slice(1, curve.length - 1))}</code></div>
     </div>
   </fieldset>
 );
