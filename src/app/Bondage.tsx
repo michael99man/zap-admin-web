@@ -74,7 +74,7 @@ export class Bondage extends React.PureComponent<{web3: any; address: string}, S
     return (
       <React.Fragment>
         {error && <div className="message message-error">{error}</div>}
-        <TotalZap zap={zap} />
+        {zap !== null && <p>You have {zap.toString()} ZAP</p>}
         <BondageForm handleDotsChange={this.handleDotsChange} web3={web3} address={address} loading={loading} />
         {requiredZap !== null && <div>
           <p>This will require {requiredZap.toString()} wei ZAP</p>
@@ -93,10 +93,6 @@ export class Bondage extends React.PureComponent<{web3: any; address: string}, S
     );
   }
 }
-
-const TotalZap = ({zap}) => (
-  zap !== null && <p>You have {zap.toString()} ZAP</p>
-);
 
 class BondageForm extends React.PureComponent<{handleDotsChange: any; loading: boolean, web3: any, address: string}> {
 

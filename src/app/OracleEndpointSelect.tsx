@@ -106,7 +106,7 @@ export class OracleEndpointSelect extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const { providers, endpoints, provider, endpoint, providerText } = this.state;
+    const { providers, endpoints, endpoint, providerText } = this.state;
     const providerOptions = providers.map(provider => ({value: provider.providerOwner, name: provider.title + ' ' + provider.providerOwner}))
     const endpointOptions = endpoints.map(endpoint => ({name: endpoint, value: endpoint}));
     return (
