@@ -66,7 +66,7 @@ import { curveString } from "./curve";
  *
  * @param provier - Provider to use
  */
-export function getEndpointInfo(web3: any, user: string, oracle: string, endpoint: string, ): Promise<any> {
+export function getEndpointInfo(web3: any, user: string, oracle: string, endpoint: string): Promise<any> {
 	if ( oracle.length == 0 ) {
 		return;
   }
@@ -77,6 +77,23 @@ export function getEndpointInfo(web3: any, user: string, oracle: string, endpoin
     provider.getDotsIssued(endpoint),
     provider.getZapBound(endpoint),
   ])).then(([bound, curve, totalBound, zapBound]) => {
+    if (!curve.values.length) throw new Error('Unable to find the endpoint.');
+    return {
+      bound: bound.toString(),
+      curve: curveString(curve.values),
+      totalBound: totalBound.toString(),
+      zapBound: zapBound.toString(),
+    };
+  });
+}
+
+export function getProviderEndpointInfo(provider, endpoint, user): Promise<any> {
+	return Promise.all([
+    provider.getBoundDots({ subscriber: user, endpoint }),
+    provider.getCurve(endpoint),
+    provider.getDotsIssued(endpoint),
+    provider.getZapBound(endpoint),
+  ]).then(([bound, curve, totalBound, zapBound]) => {
     if (!curve.values.length) throw new Error('Unable to find the endpoint.');
     return {
       bound: bound.toString(),

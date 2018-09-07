@@ -38,7 +38,10 @@ export class CurveInit extends React.PureComponent<{web3: any; address: string},
     e.preventDefault();
     const {web3, address} = this.props;
     const {curves} = this.state;
-    if (!curves.length) return;
+    if (!curves.length) {
+      this.setState({error: 'At least one curve is needed.'});
+      return;
+    }
     const endpoint = e.target.endpoint.value;
     this.setState({loading: true});
     try {

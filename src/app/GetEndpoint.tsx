@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { getEndpointInfo } from '../provider';
+import { getEndpointInfo, getProviderEndpointInfo } from '../provider';
+import { OracleEndpointSelect } from './OracleEndpointSelect';
 
 export class GetEndpoint extends React.PureComponent<{web3: any; address: string}, {error: string; info: any; loading: boolean}> {
   constructor(props) {
@@ -11,21 +12,17 @@ export class GetEndpoint extends React.PureComponent<{web3: any; address: string
     };
   }
 
-  handleSubmit(e) {
-    e.preventDefault();
-    const {web3, address} = this.props;
-    const form = e.target;
+  handleSubmit({provider, endpoint}) {
     this.setState({
       loading: true,
       error: null,
       info: null,
     });
-    getEndpointInfo(web3, address, form.oracle.value, form.endpoint.value).then(info => {
+    getProviderEndpointInfo(provider, endpoint, this.props.address).then(info => {
       this.setState({
         info,
         loading: false,
       });
-      form.reset();
     }).catch(e => {
       this.setState({
         error: e.message,
@@ -36,6 +33,7 @@ export class GetEndpoint extends React.PureComponent<{web3: any; address: string
 
   render() {
     const {error, info, loading} = this.state;
+    const {web3, address} = this.props;
     return (
       <React.Fragment>
         {info && <div>
@@ -44,19 +42,9 @@ export class GetEndpoint extends React.PureComponent<{web3: any; address: string
           <div><strong>Total DOTs:</strong> {info.totalBound}</div>
           <div><strong>Zap Bound:</strong> {info.zapBound}</div>
         </div>}
-        <form className={loading ? 'disabled' : undefined} onSubmit={e => {this.handleSubmit(e)}}>
+        <form className={loading ? 'disabled' : undefined}>
           {error && <div className="message message-error">{error}</div>}
-          <div className="form-group">
-            <label htmlFor="oracle">Oracle address</label>
-            <input type="text" name="oracle" id="oracle" required />
-          </div>
-          <div className="form-group">
-            <label htmlFor="endpoint">Endpoint</label>
-            <input type="text" name="endpoint" id="endpoint" required />
-          </div>
-          <div className="form-group">
-            <button type="submit">Submit</button>
-          </div>
+          <OracleEndpointSelect web3={web3} address={address} onSelect={e => { this.handleSubmit(e) }} ></OracleEndpointSelect>
         </form>
       </React.Fragment>
     );

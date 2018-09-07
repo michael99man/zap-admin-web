@@ -30,7 +30,9 @@ async function main() {
 
 const appRef = document.getElementById('app');
 store.subscribe(() => {
+  // console.log('InputAutocomplete', InputAutocomplete);
   render(React.createElement(App, {state: store.getState(), dispatch}, null), appRef);
+  // render(React.createElement(InputAutocomplete, {state: store.getState(), dispatch}, null), appRef);
 });
 
 main();

@@ -1,16 +1,16 @@
 import * as React from 'react';
-import { Fragment } from 'react';
 import Menu from './Menu';
 import { ViewsEnum } from '../views.enum';
 import { Oracles } from './Oracles';
 import './app.css';
 import { CurveInit } from './CurveInit';
 import { GetEndpoint } from './GetEndpoint';
+import { Bondage } from './Bondage';
 
 export const App = ({state, dispatch}) => {
   const { provider, view, address } = state;
   return (
-    <Fragment>
+    <React.Fragment>
       <header>
         <Address address={address}></Address>
         <Provider {...provider}></Provider>
@@ -21,7 +21,7 @@ export const App = ({state, dispatch}) => {
         </aside>
         <MainSection {...state}></MainSection>
       </main>
-    </Fragment>
+    </React.Fragment>
   );
 };
 
@@ -41,6 +41,9 @@ const MainSection = ({info, address, view, oracles, viewLoading, web3}) => {
     case ViewsEnum.GET_ENDPOINT:
       main = <GetEndpoint web3={web3} address={address}></GetEndpoint>;
       break;
+    case ViewsEnum.BONDAGE:
+      main = <Bondage web3={web3} address={address}></Bondage>;
+      break;
   }
   return <section className={className}>{viewLoading ? 'Loading ...' : main}</section>;
 };
@@ -50,11 +53,11 @@ const Address = ({address}) => (
 );
 
 const Info = ({address, eth, zap}) => (
-  <Fragment>
+  <React.Fragment>
     <div>Address: {address}</div>
     <div>ETH Balance: {eth} wei</div>
     <div>ZAP Balance: {zap} wei ZAP</div>
-  </Fragment>
+  </React.Fragment>
 );
 
 const Provider = ({loaded, title}) => (

@@ -95,10 +95,17 @@ import { curveString } from './curve';
 	console.log('You have', bal.toString(), 'ZAP');
 } */
 
+export function getProvidersWithTitles(web3, user): Promise<ZapProvider[]> {
+	return loadSubscriber(web3, user)
+		.then(subscriber => subscriber.zapRegistry.getAllProviders())
+		.then(addresses => Promise.all(addresses.map(address => loadProvider(web3, address))))
+		.then(providers => Promise.all(providers.map((provider: ZapProvider) => provider.getTitle().then(() => provider))));
+}
+
 /**
  * List all of the oracles currently available
  */
-export async function listOracles(web3: any) {
+export function listOracles(web3: any) {
   return loadAccount(web3)
     .then(user => loadSubscriber(web3, user))
     .then(subscriber => subscriber.zapRegistry.getAllProviders())
