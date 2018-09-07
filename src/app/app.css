@@ -9,7 +9,7 @@ body {
   overflow-y: scroll;
   background-color: #fff;
   color: #1a1a1a;
-  line-height: 1;
+  line-height: 1.5;
 }
 
 body * {

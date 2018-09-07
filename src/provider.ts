@@ -70,21 +70,7 @@ export function getEndpointInfo(web3: any, user: string, oracle: string, endpoin
 	if ( oracle.length == 0 ) {
 		return;
   }
-
-  return loadProvider(web3, oracle).then(provider => Promise.all([
-    provider.getBoundDots({ subscriber: user, endpoint }),
-    provider.getCurve(endpoint),
-    provider.getDotsIssued(endpoint),
-    provider.getZapBound(endpoint),
-  ])).then(([bound, curve, totalBound, zapBound]) => {
-    if (!curve.values.length) throw new Error('Unable to find the endpoint.');
-    return {
-      bound: bound.toString(),
-      curve: curveString(curve.values),
-      totalBound: totalBound.toString(),
-      zapBound: zapBound.toString(),
-    };
-  });
+  return loadProvider(web3, oracle).then(provider => getProviderEndpointInfo(provider, endpoint, user));
 }
 
 export function getProviderEndpointInfo(provider, endpoint, user): Promise<any> {

@@ -10,12 +10,14 @@ interface Props {
   value: string;
   options: Array<Option>;
   onSelect?: (e: string) => any;
-  onChange?: (e: string) => any;
+  onChange: (e: string) => any;
+  onBlur?: (e: string) => any;
+  placehoder?: string;
+  disabled?: boolean;
 }
 
 interface State {
   open: boolean;
-  value: string;
   index: number;
 }
 
@@ -28,7 +30,6 @@ export class InputAutocomplete extends React.PureComponent<Props, State> {
     this.state = {
       index: -1,
       open: false,
-      value: props.value,
     }
     this.openDropdown = this.openDropdown.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -51,11 +52,7 @@ export class InputAutocomplete extends React.PureComponent<Props, State> {
   closeDropdown(delay = 0) {
     if (this.timeout) clearTimeout(this.timeout);
     this.timeout = setTimeout(() => {
-      const state = { open: false, value: this.props.value };
-      if (!this.state.value) {
-        this.props.onSelect('');
-        state.value = '';
-      }
+      const state = { open: false };
       this.setState(state);
     }, delay);
   }
@@ -64,7 +61,6 @@ export class InputAutocomplete extends React.PureComponent<Props, State> {
     this.setState({
       open: false,
       index: -1,
-      value,
     });
     if (this.props.onChange) this.props.onChange(value);
     if (this.props.onSelect) this.props.onSelect(value);
@@ -82,19 +78,20 @@ export class InputAutocomplete extends React.PureComponent<Props, State> {
     this.setState({
       index: 0,
       open: !!value.trim(),
-      value
     });
     if (this.props.onChange) this.props.onChange(value);
   }
 
   handleBlur() {
-    this.closeDropdown(300);
+    this.closeDropdown(200);
+    const {onBlur, value} = this.props;
+    if (onBlur) onBlur(value);
   }
 
   handleKeyDown(e, options) {
     switch (e.key) {
       case 'ArrowDown':
-        this.setState({open: true, index: this.getIndex(1, options)});
+        this.setState({open: true, index: this.state.open ? this.getIndex(1, options) : 0});
         break;
       case 'ArrowUp':
         if (this.state.open) this.setState({index: this.getIndex(-1, options)});
@@ -112,14 +109,16 @@ export class InputAutocomplete extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const {options, onChange} = this.props;
+    const {options, placehoder, disabled, value} = this.props;
     const {open, index} = this.state;
-    const value = !!onChange ? this.props.value : this.state.value;
+    // const value = !!onChange ? this.props.value : this.state.value;
     const filteredOptions = InputAutocomplete.getFilteredOptions(value, options);
     return (
       <div className="input-autocomplete__wrapper">
         {!!value && <a className="input-autocomplete__close" onClick={() => {this.handleDropdownSelect('')}} >&times;</a>}
         <input
+          disabled={disabled}
+          placeholder={placehoder}
           className="input-autocomplete"
           value={value}
           onKeyDown={e => {this.handleKeyDown(e, filteredOptions)}}
@@ -142,7 +141,7 @@ const InputAutocompleteDropdown = ({options, index, onSelect}) => (
   <div className="input-autocomplete__dropdown">
     {options.map((option: Option, i) =>
       <div key={'' + option.value + option.name} className={index === i ? 'active' : undefined} onClick={() => {onSelect(option.value)}}>
-        {option.name + ' ' + option.value}
+        {option.name}
       </div>
     )}
   </div>

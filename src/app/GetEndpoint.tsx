@@ -12,11 +12,16 @@ export class GetEndpoint extends React.PureComponent<{web3: any; address: string
     };
   }
 
-  handleSubmit({provider, endpoint}) {
+  handleSubmit(e) {
     this.setState({
-      loading: true,
+      loading: false,
       error: null,
       info: null,
+    });
+    if (!e) return;
+    const {provider, endpoint} = e;
+    this.setState({
+      loading: true,
     });
     getProviderEndpointInfo(provider, endpoint, this.props.address).then(info => {
       this.setState({
