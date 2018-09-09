@@ -9,6 +9,7 @@ import { Bondage } from './Bondage';
 import { getZap, getEth } from '../subscriber';
 import { ZapProvider } from '@zapjs/provider/lib/src';
 import { Unbondage } from './Unbondage';
+import { Query } from './Query';
 
 interface AppProps {
   defaultProvider: ZapProvider;
@@ -74,6 +75,9 @@ class MainSection extends React.PureComponent<{address: string; view: ViewsEnum;
         break;
       case ViewsEnum.UNBONDAGE:
         main = <Unbondage web3={web3} address={address}></Unbondage>;
+        break;
+      case ViewsEnum.QUERY:
+        main = <Query web3={web3} address={address}></Query>;
         break;
     }
     return <section className={className}>{main}</section>;
