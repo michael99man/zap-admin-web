@@ -10,6 +10,7 @@ import { getZap, getEth } from '../subscriber';
 import { ZapProvider } from '@zapjs/provider/lib/src';
 import { Unbondage } from './Unbondage';
 import { Query } from './Query';
+import { CreateProvider } from './CreateProvider';
 
 interface AppProps {
   defaultProvider: ZapProvider;
@@ -78,6 +79,9 @@ class MainSection extends React.PureComponent<{address: string; view: ViewsEnum;
         break;
       case ViewsEnum.QUERY:
         main = <Query web3={web3} address={address}></Query>;
+        break;
+      case ViewsEnum.CREATE_PROVIDER:
+        main = <CreateProvider web3={web3} address={address}></CreateProvider>;
         break;
     }
     return <section className={className}>{main}</section>;
