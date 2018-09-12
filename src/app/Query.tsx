@@ -5,6 +5,7 @@ import { BNType, DEFAULT_GAS } from '@zapjs/types';
 import { ZapProvider } from '@zapjs/provider/lib/src';
 import { ZapSubscriber } from '@zapjs/subscriber';
 import { loadSubscriber } from '../utils';
+import { getQueryResponse } from '../provider';
 
 interface State {
   error: string;
@@ -96,15 +97,8 @@ export class Query extends React.PureComponent<{web3: any; address: string}, Sta
 
     const id = web3.utils.toBN(txid.events['Incoming'].returnValues['id']);
     console.log('Query ID generate was', '0x' + id.toString(16));
-    const filter = {id};
-    subscriber.zapDispatch.contract.once('OffchainResponse', {filter}, this.queryResponse)
-    subscriber.zapDispatch.contract.once('OffchainResponseInt', {filter}, this.queryResponse)
-    subscriber.zapDispatch.contract.once('OffchainResult1', {filter}, this.queryResponse)
-    subscriber.zapDispatch.contract.once('OffchainResult2', {filter}, this.queryResponse)
-    subscriber.zapDispatch.contract.once('OffchainResult3', {filter}, this.queryResponse)
-    subscriber.zapDispatch.contract.once('OffchainResult4', {filter}, this.queryResponse)
-    // TODO: somehow check if this works.
-    // We cannot use `subscriber.listenToOffchainResponse` becuse it's a huge momory leak
+    const response = await getQueryResponse(subscriber, {id});
+    console.log(response);
   }
 
   render() {

@@ -167,6 +167,26 @@ export function getProviderEndpointInfo(provider, endpoint, user): Promise<any> 
 	console.log('Response', res);
 } */
 
+export function getQueryResponse(subscriber: ZapSubscriber, filter) {
+	return new Promise((resolve, reject) => {
+		let eventEmitters = [];
+		let fulfilled = false;
+		const listener = (err, data) => {
+			if (fulfilled) return;
+			if (err) reject(err);
+			else resolve(data.returnValues.response);
+			fulfilled = true;
+			eventEmitters.forEach(e => { e.unsubscribe(); })
+		};
+		eventEmitters.push(subscriber.zapDispatch.contract.events.OffchainResponse({filter}, listener));
+		eventEmitters.push(subscriber.zapDispatch.contract.events.OffchainResponseInt({filter}, listener));
+		eventEmitters.push(subscriber.zapDispatch.contract.events.OffchainResult1({filter}, listener));
+		eventEmitters.push(subscriber.zapDispatch.contract.events.OffchainResult2({filter}, listener));
+		eventEmitters.push(subscriber.zapDispatch.contract.events.OffchainResult3({filter}, listener));
+		eventEmitters.push(subscriber.zapDispatch.contract.events.OffchainResult4({filter}, listener));
+	});
+}
+
 /* export async function doResponses(web3: any) {
 	const address: string = await loadAccount(web3);
 	const provider: ZapProvider = await loadProvider(web3, address);
