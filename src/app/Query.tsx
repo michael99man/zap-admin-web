@@ -16,6 +16,7 @@ interface State {
   endpoint: string;
   dots: number;
   txid: any;
+  queryResponse: any;
 }
 
 export class Query extends React.PureComponent<{web3: any; address: string}, State> {
@@ -31,11 +32,11 @@ export class Query extends React.PureComponent<{web3: any; address: string}, Sta
       endpoint: '',
       dots: null,
       txid: null,
+      queryResponse: null,
     };
     this.handleProviderEndpointSelect = this.handleProviderEndpointSelect.bind(this);
     this.handleDotsChange = this.handleDotsChange.bind(this);
     this.handleQuery = this.handleQuery.bind(this);
-    this.queryResponse = this.queryResponse.bind(this);
   }
 
   componentDidMount() {
@@ -67,42 +68,61 @@ export class Query extends React.PureComponent<{web3: any; address: string}, Sta
     }).catch(e => { this.setState({error: e.message}) });
   }
 
-  queryResponse(error, event) {
-    console.log('queryResponse error', error);
-    console.log('queryResponse event', event);
-  }
-
   async handleQuery(e) {
     e.preventDefault();
     const form = e.target;
     const { endpointParams, query } = form;
-    this.setState({ loading: true });
     const { web3, address } = this.props;
-    const { provider, endpoint, dots } = this.state;
-    const subscriber: ZapSubscriber = await loadSubscriber(web3, address);
-    const txid: string | any = await subscriber.queryData({
-      provider: provider.providerOwner,
-      query: query.value,
-      endpoint,
-      endpointParams: endpointParams.value.split('\n').map(e => e.trim).filter(e => !!e),
-      gas: DEFAULT_GAS.toNumber()
-    });
+    const { provider, endpoint } = this.state;
     this.setState({
-      txid,
-      bondedDots: null,
+      loading: true,
+      txid: null,
+      queryResponse: null,
     });
-    this.updateZapAndDots(provider, endpoint);
+    const subscriber: ZapSubscriber = await loadSubscriber(web3, address);
+    let txid: string | any;
+    try {
+      txid = await subscriber.queryData({
+        provider: provider.providerOwner,
+        query: query.value,
+        endpoint,
+        endpointParams: endpointParams.value.split('\n').map(e => e.trim()).filter(e => !!e),
+        gas: DEFAULT_GAS.toNumber()
+      });
+      this.setState({
+        txid,
+        queryResponse: null,
+      });
+      this.updateZapAndDots(provider, endpoint);
+    } catch(error) {
+      this.setState({
+        loading: false,
+        error,
+      });
+      this.updateZapAndDots(provider, endpoint);
+      return;
+    }
 
     // Listen to response
-
-    const id = web3.utils.toBN(txid.events['Incoming'].returnValues['id']);
-    console.log('Query ID generate was', '0x' + id.toString(16));
-    const response = await getQueryResponse(subscriber, {id});
-    console.log(response);
+    try {
+      const id = web3.utils.toBN(txid.events['Incoming'].returnValues['id']);
+      console.log('Query ID generate was', '0x' + id.toString(16));
+      const response = await getQueryResponse(subscriber, {id});
+      this.setState({
+        loading: false,
+        queryResponse: response,
+      });
+      console.log(response);
+    } catch (error) {
+      this.setState({
+        loading: false,
+        error,
+      });
+    }
   }
 
   render() {
-    const { error, loading, zap, bondedDots, txid, dots } = this.state;
+    const { error, loading, zap, bondedDots, txid, queryResponse } = this.state;
     const { web3, address } = this.props;
     return (
       <React.Fragment>
@@ -128,6 +148,7 @@ export class Query extends React.PureComponent<{web3: any; address: string}, Sta
         {txid !== null && <div>
           <p>Queried provider. Transaction Hash: {typeof txid == 'string' ? txid : txid.transactionHash}</p>
         </div>}
+        {queryResponse !== null && <div> {queryResponse} </div>}
       </React.Fragment>
     );
   }
