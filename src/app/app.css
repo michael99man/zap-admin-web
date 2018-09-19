@@ -120,3 +120,17 @@ button, a {
   background-color: #f8d7da;
   border-color: #f5c6cb;
 }
+
+.metamask-login {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+.metamask-login > div {
+  margin: 1rem;
+}
+
+.metamask-login > .form-group:first-of-type {
+  width: 50%;
+}
