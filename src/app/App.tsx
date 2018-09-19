@@ -76,20 +76,22 @@ export class App extends React.Component {
               <button type="button" onClick={() => { this.handleMetamaskLogin() }}>Login</button>
               {!isMetamaskAvailable && <span> Metamask is not available </span>}
             </fieldset>
-            <fieldset className="metamask-login">
+            <fieldset>
               <legend>Custom login</legend>
-              <div className="form-group">
-                <label htmlFor="mnemonic">Mnemonic</label>
-                <input type="text" name="mnemonic" id="mnemonic" required/>
-              </div>
-              <div className="form-group">
-                <label htmlFor="network">Network</label>
-                <select name="network" id="network" required>
-                  {networks.map(network => <option key={network.CHAIN_ID} value={network.url}>{network.name}</option>)}
-                </select>
-              </div>
-              <div className="form-group">
-                <button type="submit">Login</button>
+              <div className="metamask-login">
+                <div className="form-group">
+                  <label htmlFor="mnemonic">Mnemonic</label>
+                  <input type="text" name="mnemonic" id="mnemonic" required/>
+                </div>
+                <div className="form-group">
+                  <label htmlFor="network">Network</label>
+                  <select name="network" id="network" required>
+                    {networks.map(network => <option key={network.CHAIN_ID} value={network.url}>{network.name}</option>)}
+                  </select>
+                </div>
+                <div className="form-group">
+                  <button type="submit">Login</button>
+                </div>
               </div>
             </fieldset>
           </form>

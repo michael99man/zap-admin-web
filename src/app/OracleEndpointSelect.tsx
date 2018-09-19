@@ -22,6 +22,7 @@ interface State {
 export class OracleEndpointSelect extends React.PureComponent<Props, State> {
 
   addressRe = /^(0x)?[0-9a-f]{40}$/i;
+  mounted: boolean;
 
   constructor(props) {
     super(props);
@@ -36,10 +37,16 @@ export class OracleEndpointSelect extends React.PureComponent<Props, State> {
   }
 
   componentDidMount() {
+    this.mounted = true;
     this.setState({loading: true});
     getProvidersWithTitles(this.props.web3, this.props.address).then(providers => {
+      if (!this.mounted) return;
       this.setState({providers});
     })
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
   }
 
   handleProviderTextChange(providerText) {

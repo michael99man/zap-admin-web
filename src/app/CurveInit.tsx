@@ -36,13 +36,14 @@ export class CurveInit extends React.PureComponent<{web3: any; address: string},
 
   async handleSubmit(e) {
     e.preventDefault();
+    const form = e.target;
     const {web3, address} = this.props;
     const {curves} = this.state;
     if (!curves.length) {
       this.setState({error: 'At least one curve is needed.'});
       return;
     }
-    const endpoint = e.target.endpoint.value;
+    const endpoint = form.endpoint.value;
     this.setState({loading: true});
     try {
       const curve: Curve = new Curve(curves.reduce((all, curve) => all.concat(curve), []));
@@ -54,7 +55,7 @@ export class CurveInit extends React.PureComponent<{web3: any; address: string},
         curves: [],
         success: 'Created endpoint ' + endpoint
       });
-      e.target.reset();
+      form.reset();
       this.setState({loading: false});
     } catch (e) {
       this.setState({

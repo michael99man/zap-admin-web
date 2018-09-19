@@ -126,6 +126,7 @@ export function listOracles(web3: any) {
       provider: oracle.providerTitle,
       endpoint: oracle.endpoint,
       address: oracle.address,
+      curveValues: curve.values,
       curve: curveString(curve.values),
     })))));
   /* const user: string = await loadAccount(web3);
