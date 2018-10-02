@@ -1,9 +1,6 @@
-import { Curve } from '@zapjs/curve';
-import { ZapSubscriber } from '@zapjs/subscriber';
 import { ZapProvider } from '@zapjs/provider';
-import { BNType } from '@zapjs/types';
 
-import { sleep, loadAccount, loadProvider, loadSubscriber } from './utils';
+import { loadAccount, loadProvider, loadSubscriber } from './utils';
 import { curveString } from './curve';
 
 /**
@@ -97,7 +94,7 @@ import { curveString } from './curve';
 
 export function getProvidersWithTitles(web3, user): Promise<ZapProvider[]> {
 	return loadSubscriber(web3, user)
-		.then(subscriber => subscriber.zapRegistry.getAllProviders())
+		.then(subscriber => subscriber.zapRegistry.getAllProviders() as Promise<string[]>)
 		.then(addresses => Promise.all(addresses.map(address => loadProvider(web3, address))))
 		.then(providers => Promise.all(providers.map((provider: ZapProvider) => provider.getTitle().then(() => provider))));
 }
@@ -108,7 +105,7 @@ export function getProvidersWithTitles(web3, user): Promise<ZapProvider[]> {
 export function listOracles(web3: any) {
   return loadAccount(web3)
     .then(user => loadSubscriber(web3, user))
-    .then(subscriber => subscriber.zapRegistry.getAllProviders())
+    .then(subscriber => subscriber.zapRegistry.getAllProviders() as Promise<string[]>)
     .then(addresses => Promise.all(addresses.map(address => loadProvider(web3, address))))
     .then(providers => Promise.all([
       Promise.all(providers.map((provider: ZapProvider) => provider.getTitle())),

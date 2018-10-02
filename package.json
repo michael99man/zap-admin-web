@@ -21,7 +21,7 @@
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "truffle-hdwallet-provider": "git+https://github.com/zapproject/truffle-hdwallet-provider.git",
-    "web3": "1.0.0-beta.33"
+    "web3": "1.0.0-beta.36"
   },
   "devDependencies": {
     "@types/react": "^16.4.13",

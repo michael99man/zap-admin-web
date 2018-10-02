@@ -63,7 +63,7 @@ export class Query extends React.PureComponent<{web3: any; address: string}, Sta
       getZap(web3, address).then(e => web3.utils.toBN(e)),
       provider.getBoundDots({ subscriber: this.props.address, endpoint}).then(Number),
     ]).then(([zap, bondedDots]) => {
-      const error = bondedDots > 0 ? null : 'You do not have any bound dots to this provider.';
+      const error = bondedDots > 0 ? this.state.error : 'You do not have any bound dots to this provider.';
       this.setState({ zap, bondedDots, error });
     }).catch(e => { this.setState({error: e.message}) });
   }
@@ -77,6 +77,7 @@ export class Query extends React.PureComponent<{web3: any; address: string}, Sta
     this.setState({
       loading: true,
       txid: null,
+      error: null,
       queryResponse: null,
     });
     const subscriber: ZapSubscriber = await loadSubscriber(web3, address);
@@ -97,7 +98,7 @@ export class Query extends React.PureComponent<{web3: any; address: string}, Sta
     } catch(error) {
       this.setState({
         loading: false,
-        error,
+        error: error.message,
       });
       this.updateZapAndDots(provider, endpoint);
       return;
@@ -112,11 +113,12 @@ export class Query extends React.PureComponent<{web3: any; address: string}, Sta
         loading: false,
         queryResponse: response,
       });
-      console.log(response);
+      console.log('query response', response);
     } catch (error) {
+      console.log('query error', error.message);
       this.setState({
         loading: false,
-        error,
+        error: error.message,
       });
     }
   }
@@ -148,7 +150,7 @@ export class Query extends React.PureComponent<{web3: any; address: string}, Sta
         {txid !== null && <div>
           <p>Queried provider. Transaction Hash: {typeof txid == 'string' ? txid : txid.transactionHash}</p>
         </div>}
-        {queryResponse !== null && <div> {queryResponse} </div>}
+        {queryResponse !== null && <div>{queryResponse}</div>}
       </React.Fragment>
     );
   }

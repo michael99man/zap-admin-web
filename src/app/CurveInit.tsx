@@ -47,6 +47,7 @@ export class CurveInit extends React.PureComponent<{web3: any; address: string},
     this.setState({loading: true});
     try {
       const curve: Curve = new Curve(curves.reduce((all, curve) => all.concat(curve), []));
+      console.log('curve', curve);
       const provider = await loadProvider(web3, address);
       await provider.initiateProviderCurve({ endpoint, term: curve.values });
       this.setState({
