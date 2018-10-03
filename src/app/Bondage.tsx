@@ -57,7 +57,9 @@ export class Bondage extends React.PureComponent<{web3: any; address: string}, S
     const { web3, address } = this.props;
     const { provider, endpoint, dots } = this.state;
     const subscriber: ZapSubscriber = await loadSubscriber(web3, address);
-    const bond_txid: string | any = await subscriber.bond({ provider: provider.providerOwner, endpoint, dots });
+     // const bond_txid = await subscriber.zapBondage.bond({provider:provider.providerOwner,endpoint,dots,from:subscriber.subscriberOwner})
+     const bond_txid: string | any = await subscriber.bond({ provider: provider.providerOwner, endpoint, dots });
+    console.log(bond_txid)
     this.setState({
       loading: false,
       bond_txid,

@@ -106,14 +106,20 @@ export class Query extends React.PureComponent<{web3: any; address: string}, Sta
 
     // Listen to response
     try {
-      const id = web3.utils.toBN(txid.events['Incoming'].returnValues['id']);
+      const id = txid.events['Incoming'].returnValues['id']
       console.log('Query ID generate was', '0x' + id.toString(16));
-      const response = await getQueryResponse(subscriber, {id});
-      this.setState({
-        loading: false,
-        queryResponse: response,
-      });
-      console.log('query response', response);
+      //const response = await getQueryResponse(subscriber, {id});
+        subscriber.listenToOffchainResponse({},(err:any,response:any)=>{
+          if(err){
+            console.error("error response from provider : ", err)
+          }
+            console.log("Response event from provider : ",response)
+            this.setState({
+                loading: false,
+                queryResponse: response.returnValues.response1,
+            });
+            console.log('query response', response);
+        })
     } catch (error) {
       console.log('query error', error.message);
       this.setState({
