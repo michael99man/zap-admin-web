@@ -167,17 +167,18 @@ export function getProviderEndpointInfo(provider, endpoint, user): Promise<any> 
 	console.log('Response', res);
 } */
 
-export function getQueryResponse(subscriber: ZapSubscriber, filter) {
+export function getQueryResponse(subscriber: ZapSubscriber, filter: any = {}) {
 	return new Promise((resolve, reject) => {
 		let eventEmitters = [];
 		let fulfilled = false;
 		const listener = (err, data) => {
 			if (fulfilled) return;
 			if (err) reject(err);
-			else resolve(data.returnValues.response);
+			else resolve(data.returnValues.response1);
 			fulfilled = true;
 			eventEmitters.forEach(e => { e.unsubscribe(); })
 		};
+		if(!filter.subscriber) filter.subscriber = subscriber.subscriberOwner;
 		eventEmitters.push(subscriber.zapDispatch.contract.events.OffchainResponse({filter}, listener));
 		eventEmitters.push(subscriber.zapDispatch.contract.events.OffchainResponseInt({filter}, listener));
 		eventEmitters.push(subscriber.zapDispatch.contract.events.OffchainResult1({filter}, listener));

@@ -104,23 +104,23 @@ export class Query extends React.PureComponent<{web3: any; address: string}, Sta
       return;
     }
 
+    const id = txid.events['Incoming'].returnValues['id']
+    console.log('Query ID generate was 0x' + id.toString(16));
+
     // Listen to response
-    try {
-      const id = web3.utils.toBN(txid.events['Incoming'].returnValues['id']);
-      console.log('Query ID generate was', '0x' + id.toString(16));
-      const response = await getQueryResponse(subscriber, {id});
+    getQueryResponse(subscriber).then(response => {
+      console.log('query response', response);
       this.setState({
         loading: false,
         queryResponse: response,
       });
-      console.log('query response', response);
-    } catch (error) {
+    }).catch(error => {
       console.log('query error', error.message);
       this.setState({
         loading: false,
         error: error.message,
       });
-    }
+    });
   }
 
   render() {

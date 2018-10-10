@@ -65,17 +65,5 @@ export async function loadSubscriber(web3: any, owner: string): Promise<ZapSubsc
 		networkProvider: web3.currentProvider,
 	};
 
-	const handler = {
-		handleIncoming: (data: string) => {
-			console.log('handleIncoming', data);
-		},
-		handleUnsubscription: (data: string) => {
-			console.log('handleUnsubscription', data);
-		},
-		handleSubscription: (data: string) => {
-			console.log('handleSubscription', data);
-		},
-	};
-
-	return new ZapSubscriber(owner, Object.assign(contracts, { handler }));
+	return new ZapSubscriber(owner, contracts);
 }
