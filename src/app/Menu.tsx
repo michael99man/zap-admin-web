@@ -22,6 +22,12 @@ export default class Menu extends PureComponent<{onMenuChange: any, providerTitl
                 onClick={() => {onMenuChange(ViewsEnum.INIT_CURVE)}}>Instantiate Bonding Curve</a>}
         </div>
         <div>
+          {!title
+            ? <a className="disabled">Set endpoint params (unavailable)</a>
+            : <a className={view === ViewsEnum.ENDPOINT_PARAMS ? 'active' : undefined}
+                onClick={() => {onMenuChange(ViewsEnum.ENDPOINT_PARAMS)}}>Set endpoint params</a>}
+        </div>
+        <div>
           <a className={view === ViewsEnum.GET_ENDPOINT ? 'active' : undefined}
             onClick={() => {onMenuChange(ViewsEnum.GET_ENDPOINT)}}>Get Endpoint</a>
         </div>

@@ -1,5 +1,7 @@
 import { ZapProvider } from "@zapjs/provider";
 import { ZapSubscriber } from "@zapjs/subscriber";
+import { hexToAddress, isIpfsAddress, addressToHex } from "./ipfs-utils";
+const {toHex, utf8ToHex, toBN, hexToUtf8} = require("web3-utils");
 
 /**
  * Promise that is resolved after a certain timeout
@@ -66,4 +68,24 @@ export async function loadSubscriber(web3: any, owner: string): Promise<ZapSubsc
 	};
 
 	return new ZapSubscriber(owner, contracts);
+}
+
+export function decodeParam(hex: string): string {
+	try {
+		return hexToUtf8(hex);
+	} catch (e) {
+		console.log(e);
+	}
+	try {
+		const address = hexToAddress(hex.replace('0x', ''));
+		if (isIpfsAddress(address)) return address;
+	} catch (e) {
+		console.log(e);
+	}
+	return hex;
+}
+
+export function encodeParam(input: string): string {
+	if (isIpfsAddress(input)) return '0x' + addressToHex(input);
+	return input.startsWith('0x') ? input : utf8ToHex(input);
 }

@@ -135,7 +135,7 @@ export class Query extends React.PureComponent<{web3: any; address: string}, Sta
           {bondedDots !== null && bondedDots > 0 && <div>
             <p>You have {bondedDots} DOTs bound to this provider's endpoint. 1 DOT will be used.</p>
             <div className="form-group">
-              <label htmlFor="endpointParams">Input your provider's endpoint paramaters one per line</label>
+              <label htmlFor="endpointParams">Input your provider's endpoint parameters one per line</label>
               <textarea id="endpointParams" name="endpointParams"></textarea>
             </div>
             <div className="form-group">

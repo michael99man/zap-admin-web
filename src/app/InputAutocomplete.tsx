@@ -10,7 +10,7 @@ interface Props {
   value: string;
   options: Array<Option>;
   onSelect?: (e: string) => any;
-  onChange: (e: string) => any;
+  onChange?: (e: string) => any;
   onBlur?: (e: string) => any;
   placehoder?: string;
   disabled?: boolean;

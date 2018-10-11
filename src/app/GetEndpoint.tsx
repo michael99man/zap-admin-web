@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { getEndpointInfo, getProviderEndpointInfo } from '../provider';
+import { getProviderEndpointInfo } from '../provider';
 import { OracleEndpointSelect } from './OracleEndpointSelect';
 
 export class GetEndpoint extends React.PureComponent<{web3: any; address: string}, {error: string; info: any; loading: boolean}> {

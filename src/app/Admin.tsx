@@ -10,6 +10,7 @@ import { ZapProvider } from '@zapjs/provider/lib/src';
 import { Unbondage } from './Unbondage';
 import { Query } from './Query';
 import { CreateProvider } from './CreateProvider';
+import { EndpointParams } from './EndpintParams';
 
 interface AdminProps {
   defaultProvider: ZapProvider;
@@ -69,6 +70,9 @@ class MainSection extends React.PureComponent<{address: string; view: ViewsEnum;
         break;
       case ViewsEnum.GET_ENDPOINT:
         main = <GetEndpoint web3={web3} address={address}></GetEndpoint>;
+        break;
+      case ViewsEnum.ENDPOINT_PARAMS:
+        main = <EndpointParams web3={web3} address={address}></EndpointParams>;
         break;
       case ViewsEnum.BONDAGE:
         main = <Bondage web3={web3} address={address}></Bondage>;
