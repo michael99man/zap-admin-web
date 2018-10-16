@@ -6,6 +6,7 @@ const {toHex, utf8ToHex, toBN, hexToUtf8} = require("web3-utils");
 
 import { loadAccount, loadProvider, loadSubscriber, decodeParam, encodeParam } from "./utils";
 import { curveString } from "./curve";
+import { func } from "prop-types";
 // import { createCurve, curveString } from "./curve";
 
 /**
@@ -189,6 +190,25 @@ export function getQueryResponse(subscriber: ZapSubscriber, filter: any = {}) {
 	});
 }
 
+/**
+ * Returns a provider paramater
+ * @param provider ZapProvider
+ * @param key utf8 string
+ */
+export function getProviderParam(provider: ZapProvider, key: string): Promise<string> {
+	return provider.zapRegistry.contract.methods.getProviderParameter(provider.providerOwner, utf8ToHex(key)).call().then(decodeParam);
+}
+
+/**
+ * Sets provider paramater
+ * @param provider ZapProvider
+ * @param key utf8 string
+ * @param param string or hex
+ */
+export function setProviderParam(provider: ZapProvider, key: string, param): Promise<txid> {
+	return provider.zapRegistry.contract.methods.setProviderParameter(utf8ToHex(key), encodeParam(param))
+		.send({from: provider.providerOwner, gas: DEFAULT_GAS});
+}
 
 /**
  * Returns an array of params
@@ -196,21 +216,19 @@ export function getQueryResponse(subscriber: ZapSubscriber, filter: any = {}) {
  * @param endpoint utf8 string
  */
 export function getEndpointParams(provider: ZapProvider, endpoint: string): Promise<string[]> {
-	const address = provider.providerOwner;
 	const encodedEndpoint = utf8ToHex(endpoint)
-	return provider.zapRegistry.contract.methods.getEndPointParams(address, encodedEndpoint).call().then(params => params.map(decodeParam));
+	return provider.zapRegistry.contract.methods.getEndPointParams(provider.providerOwner, encodedEndpoint).call()
+		.then(params => params.map(decodeParam));
 }
 
 /**
  * Sets endpoints params
  * @param provider ZapProvider
  * @param endpoint utf8 string
- * @param params array of params
+ * @param params array of strings or hex
  */
 export function setEndpointParams(provider: ZapProvider, endpoint: string, params: string[]): Promise<txid>{
-	console.log('params', params);
 	const encodedParams = params.map(encodeParam);
-	console.log('encodedParams', encodedParams);
 	return provider.zapRegistry.contract.methods.setEndpointParams(utf8ToHex(endpoint), encodedParams)
 		.send({from: provider.providerOwner, gas: DEFAULT_GAS});
 }

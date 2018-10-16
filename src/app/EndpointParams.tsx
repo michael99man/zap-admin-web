@@ -75,7 +75,7 @@ export class EndpointParams extends React.PureComponent<{web3: any; address: str
       console.log('txid', txid);
       this.setState({
         loading: false,
-        success: 'Params has been set',
+        success: 'Params have been set',
       });
       this.loadParams(endpoint);
     }).catch(e => {

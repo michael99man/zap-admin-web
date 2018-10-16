@@ -23,6 +23,12 @@ export default class Menu extends PureComponent<{onMenuChange: any, providerTitl
         </div>
         <div>
           {!title
+            ? <a className="disabled">Provider params (unavailable)</a>
+            : <a className={view === ViewsEnum.PROVIDER_PARAMS ? 'active' : undefined}
+                onClick={() => {onMenuChange(ViewsEnum.PROVIDER_PARAMS)}}>Provider params</a>}
+        </div>
+        <div>
+          {!title
             ? <a className="disabled">Set endpoint params (unavailable)</a>
             : <a className={view === ViewsEnum.ENDPOINT_PARAMS ? 'active' : undefined}
                 onClick={() => {onMenuChange(ViewsEnum.ENDPOINT_PARAMS)}}>Set endpoint params</a>}
@@ -41,8 +47,7 @@ export default class Menu extends PureComponent<{onMenuChange: any, providerTitl
             onClick={() => {onMenuChange(ViewsEnum.UNBONDAGE)}}>Unbond Zap</a>
         </div>
         <div>
-          <a
-            className={view === ViewsEnum.QUERY ? 'active' : undefined}
+          <a className={view === ViewsEnum.QUERY ? 'active' : undefined}
             onClick={() => {onMenuChange(ViewsEnum.QUERY)}}>Query</a>
         </div>
         <div>

@@ -1,7 +1,7 @@
 import { ZapProvider } from "@zapjs/provider";
 import { ZapSubscriber } from "@zapjs/subscriber";
 import { hexToAddress, isIpfsAddress, addressToHex } from "./ipfs-utils";
-const {toHex, utf8ToHex, toBN, hexToUtf8} = require("web3-utils");
+const {utf8ToHex, hexToUtf8} = require("web3-utils");
 
 /**
  * Promise that is resolved after a certain timeout
