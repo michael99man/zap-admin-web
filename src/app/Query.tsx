@@ -108,7 +108,7 @@ export class Query extends React.PureComponent<{web3: any; address: string}, Sta
     console.log('Query ID generate was 0x' + id.toString(16));
 
     // Listen to response
-    getQueryResponse(subscriber).then(response => {
+    getQueryResponse(subscriber, {id}).then(response => {
       console.log('query response', response);
       this.setState({
         loading: false,
