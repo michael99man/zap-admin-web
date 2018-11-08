@@ -1,13 +1,17 @@
 import * as React from 'react';
-import { ZapProvider } from '@zapjs/provider/lib/src';
+import { ZapProvider } from '@zapjs/provider';
+import 'github-markdown-css';
+import * as marked from 'marked';
 import { InputAutocomplete } from './InputAutocomplete';
 import { getProvidersWithTitles } from '../subscriber';
-import { loadProvider } from '../utils';
+import { loadProvider, getUrlText, formatJSON } from '../utils';
+import { getProviderParam } from '../provider';
 
 interface Props {
   onSelect: ({provider: ZapProvider, endpoint: string}) => void;
   web3: any;
   address: string;
+  showParams?: boolean;
 }
 
 interface State {
@@ -17,6 +21,8 @@ interface State {
   endpoint: string;
   loading: boolean;
   providerText: string;
+  endpointMd: string;
+  endpointJson: string;
 }
 
 export class OracleEndpointSelect extends React.PureComponent<Props, State> {
@@ -33,6 +39,8 @@ export class OracleEndpointSelect extends React.PureComponent<Props, State> {
       endpoint: '',
       loading: false,
       providerText: '',
+      endpointMd: '',
+      endpointJson: '',
     }
   }
 
@@ -84,6 +92,8 @@ export class OracleEndpointSelect extends React.PureComponent<Props, State> {
         provider: provider,
         providerText: provider.providerOwner,
         endpoint: '',
+        endpointMd: '',
+        endpointJson: '',
         endpoints: [],
       });
       this.updateProviderEndpoints(provider);
@@ -110,10 +120,20 @@ export class OracleEndpointSelect extends React.PureComponent<Props, State> {
       endpoint,
       provider: this.state.provider
     });
+    if (!this.props.showParams) return;
+    Promise.all([
+      getProviderParam(this.state.provider, endpoint + '.md').then(getUrlText).catch(e => { console.log(e); return ''; }),
+      getProviderParam(this.state.provider, endpoint + '.json').then(getUrlText).catch(e => { console.log(e); return ''; }),
+    ]).then(([markdown, schema]) => {
+      this.setState({
+        endpointMd: markdown,
+        endpointJson: schema,
+      });
+    }).catch(console.error);
   }
 
   render() {
-    const { providers, endpoints, endpoint, providerText } = this.state;
+    const { providers, endpoints, endpoint, providerText, endpointJson, endpointMd } = this.state;
     const providerOptions = providers.map(provider => ({value: provider.providerOwner, name: provider.title + ' ' + provider.providerOwner}))
     const endpointOptions = endpoints.map(endpoint => ({name: endpoint, value: endpoint}));
     return (
@@ -139,7 +159,19 @@ export class OracleEndpointSelect extends React.PureComponent<Props, State> {
             onSelect={e => {this.handleEndpointSelect(e)}}
           />
         </div>
+        {this.props.showParams && <div>
+          {endpointMd && <Markdown markdown={endpointMd}></Markdown>}
+          {endpointJson && <Json json={endpointJson}></Json>}
+        </div>}
       </React.Fragment>
     )
   }
+}
+
+export const Markdown = ({markdown}) => {
+  return <div className="markdown-body" dangerouslySetInnerHTML={{__html: marked(markdown)}}></div>
+}
+
+export const Json = ({json}) => {
+  return <div className="json"><code><pre>{formatJSON(json)}</pre></code></div>
 }

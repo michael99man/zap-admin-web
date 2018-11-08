@@ -49,7 +49,7 @@ export class GetEndpoint extends React.PureComponent<{web3: any; address: string
         </div>}
         <form className={loading ? 'disabled' : undefined}>
           {error && <div className="message message-error">{error}</div>}
-          <OracleEndpointSelect web3={web3} address={address} onSelect={e => { this.handleSubmit(e) }} ></OracleEndpointSelect>
+          <OracleEndpointSelect showParams={true} web3={web3} address={address} onSelect={e => { this.handleSubmit(e) }} ></OracleEndpointSelect>
         </form>
       </React.Fragment>
     );

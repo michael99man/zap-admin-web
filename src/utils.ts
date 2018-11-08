@@ -71,6 +71,7 @@ export async function loadSubscriber(web3: any, owner: string): Promise<ZapSubsc
 }
 
 export function decodeParam(hex: string): string {
+	if (hex.indexOf('0x') !== 0) return hex;
 	try {
 		return hexToUtf8(hex);
 	} catch (e) {
@@ -88,4 +89,14 @@ export function decodeParam(hex: string): string {
 export function encodeParam(input: string): string {
 	if (isIpfsAddress(input)) return '0x' + addressToHex(input);
 	return input.startsWith('0x') ? input : utf8ToHex(input);
+}
+
+export function getUrlText(url: string): Promise<string> {
+	return Promise.race([
+		fetch(isIpfsAddress(url) ? 'https://cloudflare-ipfs.com/ipfs/' + url : url),
+		new Promise((_, reject) => { setTimeout(() => { reject(new Error('Request timeout.')); }, 2000); }),
+	]).then((response: any) => response.text());
+}
+export function formatJSON(json: string, tab = 4): string {
+	return JSON.stringify(JSON.parse(json), null, tab);
 }

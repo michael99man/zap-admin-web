@@ -4,9 +4,10 @@ import { ZapSubscriber } from "@zapjs/subscriber";
 import { txid, DEFAULT_GAS, BNType } from "@zapjs/types";
 const {toHex, utf8ToHex, toBN, hexToUtf8} = require("web3-utils");
 
-import { loadAccount, loadProvider, loadSubscriber, decodeParam, encodeParam } from "./utils";
+import { loadAccount, loadProvider, loadSubscriber, decodeParam, encodeParam, getUrlText } from "./utils";
 import { curveString } from "./curve";
 import { func } from "prop-types";
+import { isIpfsAddress } from "./ipfs-utils";
 // import { createCurve, curveString } from "./curve";
 
 /**
@@ -216,9 +217,7 @@ export function setProviderParam(provider: ZapProvider, key: string, param): Pro
  * @param endpoint utf8 string
  */
 export function getEndpointParams(provider: ZapProvider, endpoint: string): Promise<string[]> {
-	const encodedEndpoint = utf8ToHex(endpoint)
-	return provider.zapRegistry.contract.methods.getEndPointParams(provider.providerOwner, encodedEndpoint).call()
-		.then(params => params.map(decodeParam));
+	return provider.getEndpointParams(endpoint).then((params: any) => params.map(decodeParam));
 }
 
 /**
@@ -227,10 +226,9 @@ export function getEndpointParams(provider: ZapProvider, endpoint: string): Prom
  * @param endpoint utf8 string
  * @param params array of strings or hex
  */
-export function setEndpointParams(provider: ZapProvider, endpoint: string, params: string[]): Promise<txid>{
+export function setEndpointParams(provider: any, endpoint: string, params: string[]): Promise<txid>{
 	const encodedParams = params.map(encodeParam);
-	return provider.zapRegistry.contract.methods.setEndpointParams(utf8ToHex(endpoint), encodedParams)
-		.send({from: provider.providerOwner, gas: DEFAULT_GAS});
+	return provider.setEndpointParams(utf8ToHex(endpoint), encodedParams);
 }
 
 /* export async function doResponses(web3: any) {
