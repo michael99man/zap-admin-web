@@ -23,7 +23,7 @@ export default class Menu extends PureComponent<{onMenuChange: any, providerTitl
         </div>
         <div>
           {!title
-            ? <a className="disabled">Provider params (unavailable)</a>
+            ? <a className="disabled">My provider params (unavailable)</a>
             : <a className={view === ViewsEnum.PROVIDER_PARAMS ? 'active' : undefined}
                 onClick={() => {onMenuChange(ViewsEnum.PROVIDER_PARAMS)}}>Provider params</a>}
         </div>

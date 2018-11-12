@@ -13,7 +13,7 @@ import { isIpfsAddress } from "./ipfs-utils";
 /**
  * Create a provider for a ZapProvider instance based on user input
  *
- * @param provider - Provider to use
+ * @param provider - Provider to use 
  */
 /* export async function createProvider(web3: any): Promise<void> {
 	console.log('Create a provider');
@@ -198,6 +198,17 @@ export function getQueryResponse(subscriber: ZapSubscriber, filter: any = {}) {
  */
 export function getProviderParam(provider: ZapProvider, key: string): Promise<string> {
 	return provider.zapRegistry.contract.methods.getProviderParameter(provider.providerOwner, utf8ToHex(key)).call().then(decodeParam);
+}
+
+/**
+ * Returns all provider paramaters as an object
+ * @param provider ZapProviderstring
+ */
+export function getAllProviderParams(provider: ZapProvider): Promise<string> {
+	let promise = provider.zapRegistry.contract.methods.getAllProviderParams(provider.providerOwner).call().then(keys=>{
+		return keys.map(decodeParam);
+	});
+	return promise;
 }
 
 /**
